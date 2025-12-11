@@ -8,33 +8,29 @@ import SwiftUI
 
 struct SubjectsListView: View {
     
-    // Colores institucionales
-    private let primaryColor = Color(red: 0.63, green: 0.00, blue: 0.24)
+    @EnvironmentObject var vm: SchoolViewModel
+    
     private let lightBackground = Color(red: 0.95, green: 0.95, blue: 0.97)
     
-    // Dummy data temporal
-    private let subjects = [
-        ("Cálculo Integral", "Lun / Mié · 10:00 - 11:30"),
-        ("Programación Orientada a Objetos", "Mar / Jue · 12:00 - 13:30"),
-        ("Bases de Datos", "Lun / Mié · 14:00 - 15:30"),
-        ("Ingeniería de Software", "Vie · 9:00 - 12:00")
-    ]
-    
     var body: some View {
+        // Usamos config dinámica
+        let config = vm.config ?? SchoolConfig.preview
+        let primaryColor = Color(hex: config.primaryColor)
+        
         NavigationStack {
             ScrollView {
                 VStack(spacing: 16) {
                     
-                    ForEach(subjects, id: \.0) { subject in
+                    ForEach(vm.subjects, id: \.id) { subject in
                         NavigationLink {
                             SubjectDetailView(
-                                subjectName: subject.0,
-                                schedule: subject.1
+                                subjectName: subject.name,
+                                schedule: subject.schedule
                             )
                         } label: {
                             SubjectRowView(
-                                title: subject.0,
-                                schedule: subject.1,
+                                title: subject.name,
+                                schedule: subject.schedule,
                                 primaryColor: primaryColor
                             )
                         }
@@ -52,5 +48,5 @@ struct SubjectsListView: View {
 
 #Preview {
     SubjectsListView()
+        .environmentObject(SchoolViewModel())
 }
-

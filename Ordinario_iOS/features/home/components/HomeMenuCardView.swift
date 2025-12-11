@@ -2,24 +2,24 @@
 //  HomeMenuCardView.swift
 //  Ordinario_iOS
 //
-//  Created by Eduardo Pérez Córdova on 03/12/25.
-//
+
 import SwiftUI
 
 struct HomeMenuCardView: View {
     let icon: String
     let title: String
-    let color: Color
+    let primaryColor: Color
     
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
+            
             Image(systemName: icon)
                 .font(.title2)
-                .foregroundColor(color)
+                .foregroundColor(primaryColor)
                 .frame(width: 38, height: 38)
                 .background(
                     RoundedRectangle(cornerRadius: 12)
-                        .fill(color.opacity(0.12))
+                        .fill(primaryColor.opacity(0.12))
                 )
             
             Text(title)
@@ -40,7 +40,6 @@ struct HomeMenuCardView: View {
     HomeMenuCardView(
         icon: "book.closed",
         title: "Materias",
-        color: Color(red: 0.63, green: 0.00, blue: 0.24)
+        primaryColor: Color(hex: SchoolConfig.preview.primaryColor)
     )
 }
-

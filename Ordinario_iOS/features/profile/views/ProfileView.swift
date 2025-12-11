@@ -8,16 +8,23 @@ import SwiftUI
 
 struct ProfileView: View {
     
-    private let primaryColor = Color(red: 0.63, green: 0.00, blue: 0.24)
-    private let lightBackground = Color(red: 0.95, green: 0.95, blue: 0.97)
+    @EnvironmentObject var vm: SchoolViewModel
     
     var body: some View {
+        
+        
+        let config = vm.config ?? SchoolConfig.preview
+        let student = vm.student
+        
+        let primaryColor = Color(hex: config.primaryColor)
+        let lightBackground = Color(hex: config.secondaryColor).opacity(0.1)
+        
         NavigationStack {
             ScrollView {
                 VStack(spacing: 24) {
                     
                     // Encabezado del perfil
-                    ProfileHeaderView(primaryColor: primaryColor)
+                    ProfileHeaderView(config: config, student: student)
                         .padding(.top, 16)
                     
                     // Opciones del perfil
@@ -66,5 +73,5 @@ struct ProfileView: View {
 
 #Preview {
     ProfileView()
+        .environmentObject(SchoolViewModel())
 }
-

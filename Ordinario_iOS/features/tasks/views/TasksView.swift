@@ -8,35 +8,27 @@ import SwiftUI
 
 struct TasksView: View {
     
-    // Colores institucionales
-    private let primaryColor = Color(red: 0.63, green: 0.00, blue: 0.24)
-    private let lightBackground = Color(red: 0.95, green: 0.95, blue: 0.97)
+    @EnvironmentObject var vm: SchoolViewModel  // Usamos SchoolViewModel
     
-    // Datos dummy por ahora
-    private let tasks = [
-        ("Entrega reporte de investigación", "Cálculo Integral", "Pendiente", "18 Nov 2025"),
-        ("Proyecto final unidad 3", "POO", "Entregada", "12 Nov 2025"),
-        ("Script SQL Normalización", "Bases de Datos", "Pendiente", "22 Nov 2025"),
-        ("Caso de uso — Documentación", "Ing. Software", "Pendiente", "20 Nov 2025")
-    ]
+    private let lightBackground = Color(red: 0.95, green: 0.95, blue: 0.97)
     
     var body: some View {
         NavigationStack {
             ScrollView {
                 VStack(spacing: 20) {
                     
-                    // Filtro (chips)
-                    TaskFilterBarView(primaryColor: primaryColor)
+                  
+                    TaskFilterBarView()
                         .padding(.top, 16)
                     
-                    // Lista de tareas
-                    ForEach(tasks, id: \.0) { task in
+                    
+                    ForEach(vm.tasks, id: \.id) { task in
                         TaskRowView(
-                            title: task.0,
-                            subject: task.1,
-                            status: task.2,
-                            date: task.3,
-                            primaryColor: primaryColor
+                            title: task.title,
+                            subject: task.subject,
+                            status: task.status,
+                            date: task.dueDate,
+                            primaryColor: Color(hex: vm.config?.primaryColor ?? "#63c")
                         )
                     }
                 }
@@ -51,5 +43,5 @@ struct TasksView: View {
 
 #Preview {
     TasksView()
+        .environmentObject(SchoolViewModel())  
 }
-

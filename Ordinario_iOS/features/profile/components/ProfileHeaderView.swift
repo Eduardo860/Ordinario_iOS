@@ -7,32 +7,38 @@
 import SwiftUI
 
 struct ProfileHeaderView: View {
-    
-    let primaryColor: Color
+
+    let config: SchoolConfig
+    let student: Student?
     
     var body: some View {
         VStack(spacing: 12) {
             
-            // Foto o avatar
+            
             ZStack {
                 Circle()
-                    .fill(primaryColor.opacity(0.15))
+                    .fill(Color(hex: config.primaryColor).opacity(0.15))
                     .frame(width: 110, height: 110)
                 
-                Image(systemName: "person.crop.circle.fill")
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: 90, height: 90)
-                    .foregroundColor(primaryColor)
+              
+                AsyncImage(url: URL(string: student?.profilePicture ?? config.logo)) { image in
+                    image.resizable()
+                        .scaledToFit()
+                        .clipShape(Circle())
+                        .frame(width: 90, height: 90)
+                        .padding(6)
+                } placeholder: {
+                    ProgressView()
+                        .tint(.gray)
+                }
             }
             
-            // Nombre del estudiante
-            Text("Alex Johnson")
+            // Nombre del estudiante y correo (si existe)
+            Text(student?.name ?? "Estudiante")
                 .font(.title2.bold())
                 .foregroundColor(.black)
             
-            // Correo / matrícula
-            Text("alex.johnson@universidad.edu")
+            Text(student?.email ?? "Correo no disponible")
                 .font(.subheadline)
                 .foregroundColor(.gray)
         }
@@ -41,6 +47,8 @@ struct ProfileHeaderView: View {
 }
 
 #Preview {
-    ProfileHeaderView(primaryColor: Color(red: 0.63, green: 0.00, blue: 0.24))
+    ProfileHeaderView(
+        config: .preview,
+        student: Student(name: "Diego Hernández", email: "test@mail.com", career: "Ingeniería", group: "7A", profilePicture: "")
+    )
 }
-

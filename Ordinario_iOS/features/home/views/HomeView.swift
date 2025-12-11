@@ -2,53 +2,57 @@
 //  HomeView.swift
 //  Ordinario_iOS
 //
-//  Created by Eduardo Pérez Córdova on 03/12/25.
-//
+//  Eduardo Pérez Córdova
+
 import SwiftUI
 
 struct HomeView: View {
-    private let institutionName = "Universidad Modelo"
-    private let welcomeMessage = "Bienvenido"
-    private let studentName = "Alex Johnson"
     
-    // Colores institucionales
-    private let primaryColor = Color(red: 0.63, green: 0.00, blue: 0.24)     // rojo vino
-    private let lightBackground = Color(red: 0.95, green: 0.95, blue: 0.97)  // gris claro
+    @EnvironmentObject var vm: SchoolViewModel
     
     var body: some View {
+        
+        let config = vm.config ?? SchoolConfig.preview
+        let student = vm.student
+        
+        let primaryColor = Color(hex: config.primaryColor)
+        let backgroundColor = Color(hex: config.secondaryColor).opacity(0.1)
+        
         NavigationStack {
             ScrollView {
                 VStack(spacing: 24) {
                     
-                    // Header institucional
+                    // HEADER
                     HomeHeaderView(
-                        institutionName: institutionName,
-                        welcomeMessage: welcomeMessage,
-                        studentName: studentName,
-                        primaryColor: primaryColor
+                        config: config,
+                        student: student
                     )
                     .padding(.horizontal)
                     .padding(.top, 16)
                     
-                    // Tarjetas de estadísticas
+                    
+                    // ESTADÍSTICAS DINÁMICAS
                     HStack(spacing: 12) {
                         HomeStatCardView(
                             title: "Materias",
-                            value: "6",
+                            value: "\(vm.subjects.count)",
                             subtitle: "Inscritas",
                             primaryColor: primaryColor
                         )
                         
                         HomeStatCardView(
                             title: "Promedio",
-                            value: "9.2",
+                            value: vm.grades.isEmpty
+                                ? "--"
+                                : String(format: "%.1f", vm.grades.map{$0.value}.average),
                             subtitle: "Actual",
                             primaryColor: primaryColor
                         )
                     }
                     .padding(.horizontal)
                     
-                    // Grid de módulos
+                    
+                    // GRID DE MÓDULOS
                     VStack(alignment: .leading, spacing: 12) {
                         Text("Módulos")
                             .font(.headline)
@@ -57,19 +61,20 @@ struct HomeView: View {
                         
                         LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 14) {
                             
-                            HomeMenuCardView(icon: "book.closed", title: "Materias", color: primaryColor)
-                            HomeMenuCardView(icon: "chart.bar.fill", title: "Calificaciones", color: primaryColor)
-                            HomeMenuCardView(icon: "checklist", title: "Tareas", color: primaryColor)
-                            HomeMenuCardView(icon: "megaphone.fill", title: "Anuncios", color: primaryColor)
-                            HomeMenuCardView(icon: "person.crop.circle", title: "Perfil", color: primaryColor)
-                            HomeMenuCardView(icon: "gearshape.fill", title: "Institución", color: primaryColor)
+                            HomeMenuCardView(icon: "book.closed", title: "Materias", primaryColor: primaryColor)
+                            HomeMenuCardView(icon: "chart.bar.fill", title: "Calificaciones", primaryColor: primaryColor)
+                            HomeMenuCardView(icon: "checklist", title: "Tareas", primaryColor: primaryColor)
+                            HomeMenuCardView(icon: "megaphone.fill", title: "Anuncios", primaryColor: primaryColor)
+                            HomeMenuCardView(icon: "person.crop.circle", title: "Perfil", primaryColor: primaryColor)
+                            HomeMenuCardView(icon: "gearshape.fill", title: "Institución", primaryColor: primaryColor)
                         }
                         .padding(.horizontal)
                         .padding(.bottom, 24)
+                        
                     }
                 }
             }
-            .background(lightBackground)
+            .background(backgroundColor)
             .navigationTitle("Dashboard")
             .navigationBarTitleDisplayMode(.inline)
         }
@@ -78,5 +83,5 @@ struct HomeView: View {
 
 #Preview {
     HomeView()
+        .environmentObject(SchoolViewModel())
 }
-

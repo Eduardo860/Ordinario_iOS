@@ -78,7 +78,6 @@ struct TaskRowView: View {
         subject: "Cálculo Integral",
         status: "Pendiente",
         date: "18 Nov 2025",
-        primaryColor: Color(red: 0.63, green: 0.00, blue: 0.24)
+        primaryColor: Color(hex: SchoolConfig.preview.primaryColor)
     )
 }
-

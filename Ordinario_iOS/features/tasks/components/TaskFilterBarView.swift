@@ -1,14 +1,8 @@
-//
-//  TaskFilterBarView.swift
-//  Ordinario_iOS
-//
-//  Created by Eduardo Pérez Córdova on 06/12/25.
-//
 import SwiftUI
 
 struct TaskFilterBarView: View {
     
-    let primaryColor: Color
+    @EnvironmentObject var vm: SchoolViewModel 
     
     @State private var selectedFilter = "Pendientes"
     
@@ -29,14 +23,14 @@ struct TaskFilterBarView: View {
                             .background(
                                 RoundedRectangle(cornerRadius: 12)
                                     .fill(filter == selectedFilter ?
-                                          primaryColor.opacity(0.15) :
+                                          Color(hex: vm.config?.primaryColor ?? "#63c" ).opacity(0.15) :
                                           Color.white)
                             )
-                            .foregroundColor(filter == selectedFilter ? primaryColor : .gray)
+                            .foregroundColor(filter == selectedFilter ? Color(hex: vm.config?.primaryColor ?? "#63c") : .gray)
                             .overlay(
                                 RoundedRectangle(cornerRadius: 12)
                                     .strokeBorder(filter == selectedFilter ?
-                                                  primaryColor.opacity(0.5) :
+                                                  Color(hex: vm.config?.primaryColor ?? "#63c").opacity(0.5) :
                                                   Color.gray.opacity(0.3))
                             )
                     }
@@ -48,8 +42,6 @@ struct TaskFilterBarView: View {
 }
 
 #Preview {
-    TaskFilterBarView(
-        primaryColor: Color(red: 0.63, green: 0.00, blue: 0.24)
-    )
+    TaskFilterBarView()
+            .environmentObject(SchoolViewModel())
 }
-

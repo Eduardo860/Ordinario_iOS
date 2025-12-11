@@ -7,6 +7,7 @@
 import SwiftUI
 
 struct SubjectRowView: View {
+    
     let title: String
     let schedule: String
     let primaryColor: Color
@@ -14,7 +15,7 @@ struct SubjectRowView: View {
     var body: some View {
         HStack(spacing: 16) {
             
-            // Ícono del curso
+            
             ZStack {
                 RoundedRectangle(cornerRadius: 12)
                     .fill(primaryColor.opacity(0.12))
@@ -53,7 +54,6 @@ struct SubjectRowView: View {
     SubjectRowView(
         title: "Cálculo Integral",
         schedule: "Lun / Mié · 10:00 - 11:30",
-        primaryColor: Color(red: 0.63, green: 0.00, blue: 0.24)
+        primaryColor: Color(hex: SchoolConfig.preview.primaryColor)
     )
 }
-

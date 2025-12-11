@@ -1,9 +1,3 @@
-//
-//  SubjectsDetailView.swift
-//  Ordinario_iOS
-//
-//  Created by Eduardo Pérez Córdova on 06/12/25.
-//
 import SwiftUI
 
 struct SubjectDetailView: View {
@@ -11,11 +5,15 @@ struct SubjectDetailView: View {
     let subjectName: String
     let schedule: String
     
-    // Colores institucionales
-    private let primaryColor = Color(red: 0.63, green: 0.00, blue: 0.24)
+    @EnvironmentObject var vm: SchoolViewModel
+    
     private let lightBackground = Color(red: 0.95, green: 0.95, blue: 0.97)
     
     var body: some View {
+        // Usamos config dinámica
+        let config = vm.config ?? SchoolConfig.preview
+        let primaryColor = Color(hex: config.primaryColor)
+        
         ScrollView {
             VStack(spacing: 24) {
                 
@@ -89,5 +87,5 @@ struct SubjectDetailView: View {
         subjectName: "Cálculo Integral",
         schedule: "Lun / Mié · 10:00 - 11:30"
     )
+    .environmentObject(SchoolViewModel())  
 }
-

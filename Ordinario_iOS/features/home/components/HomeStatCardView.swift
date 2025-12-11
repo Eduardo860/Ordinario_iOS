@@ -2,8 +2,7 @@
 //  HomeStatCardView.swift
 //  Ordinario_iOS
 //
-//  Created by Eduardo Pérez Córdova on 03/12/25.
-//
+
 import SwiftUI
 
 struct HomeStatCardView: View {
@@ -14,6 +13,7 @@ struct HomeStatCardView: View {
     
     var body: some View {
         VStack(alignment: .leading, spacing: 6) {
+            
             Text(title)
                 .font(.caption)
                 .foregroundColor(.gray)
@@ -41,7 +41,6 @@ struct HomeStatCardView: View {
         title: "Materias",
         value: "6",
         subtitle: "Inscritas",
-        primaryColor: Color(red: 0.63, green: 0.00, blue: 0.24)
+        primaryColor: Color(hex: SchoolConfig.preview.primaryColor)
     )
 }
-

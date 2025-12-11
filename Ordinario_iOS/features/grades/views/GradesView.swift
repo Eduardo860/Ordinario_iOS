@@ -8,32 +8,23 @@ import SwiftUI
 
 struct GradesView: View {
     
-    // Colores institucionales
-    private let primaryColor = Color(red: 0.63, green: 0.00, blue: 0.24)
-    private let lightBackground = Color(red: 0.95, green: 0.95, blue: 0.97)
+    @EnvironmentObject var vm: SchoolViewModel 
     
-    // Datos falsos por ahora
-    private let grades = [
-        ("Cálculo Integral", "9.2"),
-        ("Programación Orientada a Objetos", "9.8"),
-        ("Bases de Datos", "8.7"),
-        ("Ingeniería de Software", "9.5"),
-        ("Probabilidad y Estadística", "8.9")
-    ]
+    private let lightBackground = Color(red: 0.95, green: 0.95, blue: 0.97)
     
     var body: some View {
         ScrollView {
             VStack(spacing: 16) {
                 
-                GradeHeaderView(primaryColor: primaryColor)
+                GradeHeaderView()
                     .padding(.horizontal)
                     .padding(.top, 16)
                 
-                ForEach(grades, id: \.0) { materia in
+                ForEach(vm.grades, id: \.id) { grade in
                     GradeRowView(
-                        subjectName: materia.0,
-                        grade: materia.1,
-                        color: primaryColor
+                        subjectName: grade.title,
+                        grade: String(grade.value),
+                        primaryColor: Color(hex: vm.config?.primaryColor ?? "#63c")
                     )
                 }
             }
@@ -46,8 +37,6 @@ struct GradesView: View {
 }
 
 #Preview {
-    NavigationStack {
-        GradesView()
-    }
+    GradesView()
+        .environmentObject(SchoolViewModel())
 }
-

@@ -8,46 +8,50 @@
 import SwiftUI
 
 struct SplashView: View {
-    // Luego esto vendrá de Firebase / ViewModel
-    private let appName: String = "EduApp"
-    private let institutionName: String = "Nombre de la institución"
-    private let primaryColor: Color = Color(red: 0.63, green: 0.0, blue: 0.24) // rojo vino
+    
+    @EnvironmentObject var vm: SchoolViewModel  // Usamos SchoolViewModel
     
     var body: some View {
+        let config = vm.config ?? SchoolConfig.preview  // Usamos config dinámica
+
         ZStack {
-            primaryColor
+            Color(hex: config.primaryColor)  // Fondo con color primario dinámico
                 .ignoresSafeArea()
-            
+
             VStack(spacing: 24) {
-                
                 Spacer()
-                
-                // Logo circular
+
+                // Logo de la institución
                 ZStack {
                     Circle()
                         .fill(Color.white)
                         .frame(width: 120, height: 120)
                         .shadow(radius: 10)
                     
-                    Image("AppLogo") // TODO: agrega imagen al Assets
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: 70, height: 70)
+                    AsyncImage(url: URL(string: config.logo)) { image in
+                        image
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 70, height: 70)
+                    } placeholder: {
+                        ProgressView()
+                            .tint(.gray)
+                    }
                 }
-                
+
                 // Nombre de la app / institución
                 VStack(spacing: 4) {
-                    Text(appName)
+                    Text(config.name)
                         .font(.largeTitle.bold())
-                        .foregroundStyle(.white)
+                        .foregroundColor(.white)
                     
-                    Text(institutionName)
+                    Text(config.welcomeMessage)
                         .font(.subheadline)
-                        .foregroundStyle(.white.opacity(0.8))
+                        .foregroundColor(.white.opacity(0.8))
                 }
                 
                 Spacer()
-                
+
                 // Loading / mensaje dinámico
                 VStack(spacing: 8) {
                     ProgressView()
@@ -55,7 +59,7 @@ struct SplashView: View {
                     
                     Text("Cargando configuración…")
                         .font(.footnote)
-                        .foregroundStyle(.white.opacity(0.8))
+                        .foregroundColor(.white.opacity(0.8))
                 }
                 .padding(.bottom, 40)
             }
@@ -66,4 +70,5 @@ struct SplashView: View {
 
 #Preview {
     SplashView()
+        .environmentObject(SchoolViewModel()) 
 }

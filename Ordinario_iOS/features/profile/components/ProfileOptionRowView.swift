@@ -38,11 +38,7 @@ struct ProfileOptionRowView: View {
         .background(
             RoundedRectangle(cornerRadius: 16)
                 .fill(Color.white)
-                .shadow(
-                    color: .black.opacity(0.05),
-                    radius: 4,
-                    x: 0, y: 2
-                )
+                .shadow(color: .black.opacity(0.05), radius: 4, x: 0, y: 2)
         )
     }
 }
@@ -51,7 +47,6 @@ struct ProfileOptionRowView: View {
     ProfileOptionRowView(
         icon: "gearshape.fill",
         title: "Configuración",
-        color: Color(red: 0.63, green: 0.00, blue: 0.24)
+        color: Color(hex: SchoolConfig.preview.primaryColor)
     )
 }
-

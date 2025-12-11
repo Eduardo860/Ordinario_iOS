@@ -16,18 +16,18 @@ struct AnnouncementCardView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
             
-            // Título del anuncio
+            
             Text(title)
                 .font(.headline)
                 .foregroundColor(primaryColor)
             
-            // Cuerpo del anuncio
+            
             Text(message)
                 .font(.body)
                 .foregroundColor(.black)
                 .fixedSize(horizontal: false, vertical: true)
             
-            // Fecha con ícono
+            
             HStack {
                 Image(systemName: "calendar")
                     .foregroundColor(.gray)
@@ -53,6 +53,6 @@ struct AnnouncementCardView: View {
         title: "Actualización de plataforma",
         message: "La plataforma estará en mantenimiento el sábado de 3 a 7 PM.",
         date: "12 Nov 2025",
-        primaryColor: Color(red: 0.63, green: 0.00, blue: 0.24)
+        primaryColor: Color(hex: SchoolConfig.preview.primaryColor)
     )
 }

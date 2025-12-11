@@ -8,9 +8,12 @@ import SwiftUI
 
 struct GradeHeaderView: View {
     
-    let primaryColor: Color
+    @EnvironmentObject var vm: SchoolViewModel
     
     var body: some View {
+        let config = vm.config ?? SchoolConfig.preview  
+        let primaryColor = Color(hex: config.primaryColor)
+        
         VStack(alignment: .leading, spacing: 12) {
             
             Text("Resumen")
@@ -45,8 +48,6 @@ struct GradeHeaderView: View {
 }
 
 #Preview {
-    GradeHeaderView(
-        primaryColor: Color(red: 0.63, green: 0.00, blue: 0.24)
-    )
+    GradeHeaderView()
+        .environmentObject(SchoolViewModel())
 }
-///CAMBIOS

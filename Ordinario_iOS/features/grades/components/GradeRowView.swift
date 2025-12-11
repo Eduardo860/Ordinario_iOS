@@ -7,21 +7,25 @@
 import SwiftUI
 
 struct GradeRowView: View {
+    
     let subjectName: String
     let grade: String
-    let color: Color
+    let primaryColor: Color
+    
+    var statusColor: Color {
+        return grade >= "9.0" ? .green : grade >= "7.0" ? .orange : .red
+    }
     
     var body: some View {
         HStack(spacing: 16) {
             
-            // Ícono con color institucional
             ZStack {
                 RoundedRectangle(cornerRadius: 12)
-                    .fill(color.opacity(0.12))
+                    .fill(primaryColor.opacity(0.12))
                     .frame(width: 48, height: 48)
                 
                 Image(systemName: "chart.bar.fill")
-                    .foregroundColor(color)
+                    .foregroundColor(primaryColor)
                     .font(.title3)
             }
             
@@ -37,10 +41,9 @@ struct GradeRowView: View {
             
             Spacer()
             
-            // Calificación grande a la derecha
             Text(grade)
                 .font(.title2.bold())
-                .foregroundColor(color)
+                .foregroundColor(primaryColor)
         }
         .padding()
         .background(
@@ -55,7 +58,7 @@ struct GradeRowView: View {
     GradeRowView(
         subjectName: "Cálculo Integral",
         grade: "9.2",
-        color: Color(red: 0.63, green: 0.00, blue: 0.24)
+        primaryColor: Color(hex: SchoolConfig.preview.primaryColor)
     )
+        .environmentObject(SchoolViewModel())
 }
-

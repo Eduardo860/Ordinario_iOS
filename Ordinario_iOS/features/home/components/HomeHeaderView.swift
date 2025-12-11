@@ -2,56 +2,64 @@
 //  HomeHeaderView.swift
 //  Ordinario_iOS
 //
-//  Created by Eduardo Pérez Córdova on 03/12/25.
-//
+
 import SwiftUI
 
 struct HomeHeaderView: View {
-    let institutionName: String
-    let welcomeMessage: String
-    let studentName: String
-    let primaryColor: Color
+
+    let config: SchoolConfig
+    let student: Student?
     
     var body: some View {
         HStack(spacing: 16) {
             
-            // Logo institucional o avatar
+            
             ZStack {
                 Circle()
-                    .fill(primaryColor.opacity(0.15))
+                    .fill(Color(hex: config.primaryColor).opacity(0.15))
                     .frame(width: 60, height: 60)
                 
-                Image("InstitutionLogo")
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: 38, height: 38)
+               
+                AsyncImage(url: URL(string: config.logo)) { image in
+                    image
+                        .resizable()
+                        .scaledToFit()
+                        .clipShape(Circle())
+                        .frame(width: 38, height: 38)
+                        .padding(6)  // Un poco de espacio entre el logo y el borde
+                } placeholder: {
+                    ProgressView()
+                        .tint(.gray)
+                }
             }
             
-            // Textos
+            // Textos dinámicos
             VStack(alignment: .leading, spacing: 4) {
-                Text(institutionName)
+                
+                
+                Text(config.name)
                     .font(.caption)
-                    .foregroundColor(.gray)
+                    .foregroundColor(Color(hex: config.secondaryColor)) // Usamos secondaryColor para el texto de la institución
                 
-                Text(welcomeMessage)
+                Text(config.welcomeMessage)
                     .font(.body)
+                    .foregroundColor(Color(hex: config.secondaryColor))
+                 
                 
-                Text(studentName)
+                Text(student?.name ?? "Estudiante")
                     .font(.headline.bold())
-                    .foregroundColor(primaryColor)
+                    .foregroundColor(Color(hex: config.primaryColor)) 
             }
             
             Spacer()
         }
+        .padding(.horizontal)
     }
 }
 
 #Preview {
     HomeHeaderView(
-        institutionName: "Universidad Modelo",
-        welcomeMessage: "Bienvenido",
-        studentName: "Alex Johnson",
-        primaryColor: Color(red: 0.63, green: 0.00, blue: 0.24)
+        config: .preview,
+        student: Student(name: "Diego Hernández", email: "test@mail.com", career: "Ing", group: "7A", profilePicture: "")
     )
 }
-
