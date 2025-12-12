@@ -10,6 +10,7 @@ import SwiftUI
 struct RegisterView: View {
     @State private var name = ""
     @State private var email = ""
+    @State private var institutionId = ""
     @State private var password = ""
     @State private var confirmPassword = ""
     @State private var isPasswordVisible = false
@@ -75,6 +76,17 @@ struct RegisterView: View {
                                 
                                 TextField("correo@ejemplo.com", text: $email)
                                     .keyboardType(.emailAddress)
+                                    .autocapitalization(.none)
+                                    .padding(.horizontal, 12)
+                                    .frame(height: 44)
+                                    .background(
+                                        RoundedRectangle(cornerRadius: 12)
+                                            .fill(Color.white)
+                                            .shadow(color: .black.opacity(0.1), radius: 6, x: 0, y: 4)
+                                    )
+                                    .padding(.horizontal)
+                                TextField("Nahualschool", text: $institutionId)
+                                    .keyboardType(.default)
                                     .autocapitalization(.none)
                                     .padding(.horizontal, 12)
                                     .frame(height: 44)
@@ -161,7 +173,7 @@ struct RegisterView: View {
                             // Register Button
                             Button {
                                 Task {
-                                    await authVM.register(email: email, password: password, name: name)
+                                    await authVM.register(email: email, password: password, name: name, institutionId: institutionId)
                                     if authVM.isAuthenticated {
                                         dismiss()
                                     }

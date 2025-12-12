@@ -47,7 +47,13 @@ class AuthViewModel: ObservableObject {
         
         do {
             let response = try await authService.login(email: email, password: password)
-            currentUser = response.user
+            
+            // Convertir FirebaseUser + Student a User
+            currentUser = response.user.toUser(withStudent: response.student)
+            
+            // Opcional: Guardar información del estudiante si la necesitas
+            // Puedes crear una propiedad @Published var currentStudent: Student?
+            
             isAuthenticated = true
         } catch {
             errorMessage = error.localizedDescription
@@ -56,15 +62,20 @@ class AuthViewModel: ObservableObject {
         
         isLoading = false
     }
-    
+
     // MARK: - Register
-    func register(email: String, password: String, name: String) async {
+    func register(email: String, password: String, name: String, institutionId: String?) async {
         isLoading = true
         errorMessage = nil
         
+        let resolvedInstitutionId = institutionId ?? "nahualschool"
+        
         do {
-            let response = try await authService.register(email: email, password: password, name: name)
-            currentUser = response.user
+            let response = try await authService.register(email: email, password:  password, name: name, institutionId: resolvedInstitutionId)
+            
+            // Convertir FirebaseUser + Student a User
+            currentUser = response.user.toUser(withStudent: response.student)
+            
             isAuthenticated = true
         } catch {
             errorMessage = error.localizedDescription

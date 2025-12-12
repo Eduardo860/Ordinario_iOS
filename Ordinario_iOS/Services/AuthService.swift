@@ -39,7 +39,7 @@ class AuthService {
     
     // Backend URL - defaults to localhost for development
     // Use configure(baseURL:) to set production URL before using the service
-    private var baseURL = "http://localhost:3000/api/auth"
+    private var baseURL = "http://localhost:3000/auth"
     
     private let keychainManager = KeychainManager.shared
     
@@ -56,7 +56,7 @@ class AuthService {
             throw AuthError.invalidURL
         }
         
-        let loginRequest = LoginRequest(email: email, password:  password)
+        let loginRequest = LoginRequest(email: email, password: password)
         
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
@@ -74,29 +74,40 @@ class AuthService {
         }
         
         guard httpResponse.statusCode == 200 else {
-            if let errorMessage = try? JSONDecoder().decode([String: String].self, from: data),
+            if let errorMessage = try? JSONDecoder().decode([String:  String].self, from: data),
                let message = errorMessage["message"] {
                 throw AuthError.serverError(message)
             }
-            throw AuthError.serverError("Error del servidor: \(httpResponse.statusCode)")
+            throw AuthError.serverError("Error del servidor:  \(httpResponse.statusCode)")
         }
         
         do {
-            let authResponse = try JSONDecoder().decode(AuthResponse.self, from: data)
+            // 🔥 CAMBIO AQUÍ: Decodificar la respuesta envuelta
+            let backendResponse = try JSONDecoder().decode(BackendResponse<AuthResponse>.self, from: data)
+            let authResponse = backendResponse.data
+            
+            // Guardar token en keychain
             _ = keychainManager.saveToken(authResponse.token)
+            
             return authResponse
         } catch {
+            print("❌ Decoding error: \(error)")
+            if let jsonString = String(data: data, encoding: .utf8) {
+                print("📄 Response JSON: \(jsonString)")
+            }
             throw AuthError.decodingError
         }
     }
     
-    // MARK:  - Register
-    func register(email: String, password: String, name: String) async throws -> AuthResponse {
-        guard let url = URL(string: "\(baseURL)/register") else {
+    // MARK: - Register
+    func register(email: String, password: String, name: String, institutionId: String?) async throws -> AuthResponse {
+        guard let url = URL(string:  "\(baseURL)/register") else {
             throw AuthError.invalidURL
         }
         
-        let registerRequest = RegisterRequest(email: email, password:  password, name: name)
+        let resolvedInstitutionId = institutionId ?? "nahualschool"
+        
+        let registerRequest = RegisterRequest(email: email, password: password, name: name, institutionId: resolvedInstitutionId)
         
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
@@ -122,10 +133,19 @@ class AuthService {
         }
         
         do {
-            let authResponse = try JSONDecoder().decode(AuthResponse.self, from: data)
+            // 🔥 CAMBIO AQUÍ: Decodificar la respuesta envuelta
+            let backendResponse = try JSONDecoder().decode(BackendResponse<AuthResponse>.self, from: data)
+            let authResponse = backendResponse.data
+            
+            // Guardar token en keychain
             _ = keychainManager.saveToken(authResponse.token)
+            
             return authResponse
         } catch {
+            print("❌ Decoding error: \(error)")
+            if let jsonString = String(data: data, encoding: .utf8) {
+                print("📄 Response JSON: \(jsonString)")
+            }
             throw AuthError.decodingError
         }
     }
@@ -179,3 +199,4 @@ class AuthService {
         return keychainManager.getToken() != nil
     }
 }
+
