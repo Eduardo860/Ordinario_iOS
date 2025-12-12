@@ -1,10 +1,3 @@
-//
-//  SchoolViewModel.swift
-//  Ordinario_iOS
-//
-//  Created by Eduardo Pérez Córdova on 10/12/25.
-//
-
 import SwiftUI
 import Combine
 
@@ -17,7 +10,10 @@ class SchoolViewModel: ObservableObject {
     @Published var grades: [Grade] = [] // Calificaciones
     @Published var student: Student? // Estudiante
     
-    private let provider: SchoolProvider 
+    private let provider: SchoolProvider
+    
+    // schoolId puede cambiar dinámicamente
+    @Published var schoolId: String = "nahualschool"
     
     // Inicialización
     init(provider: SchoolProvider = FirebaseSchoolProvider()) {
@@ -27,34 +23,28 @@ class SchoolViewModel: ObservableObject {
     
     // Cargar datos de Firebase
     func loadInitialData(studentId: String) {
-        
-        // Cargar configuración
-        provider.fetchConfig { [weak self] config in
+        // Usar schoolId dinámico en las llamadas de Firebase
+        provider.fetchConfig(schoolId: schoolId) { [weak self] config in
             self?.config = config
         }
         
-        // Cargar anuncios
-        provider.fetchAnnouncements { [weak self] list in
+        provider.fetchAnnouncements(schoolId: schoolId) { [weak self] list in
             self?.announcements = list
         }
         
-        // Cargar materias
-        provider.fetchSubjects(for: studentId) { [weak self] list in
+        provider.fetchSubjects(for: studentId, schoolId: schoolId) { [weak self] list in
             self?.subjects = list
         }
         
-        // Cargar tareas
-        provider.fetchTasks(for: studentId) { [weak self] list in
+        provider.fetchTasks(for: studentId, schoolId: schoolId) { [weak self] list in
             self?.tasks = list
         }
         
-        // Cargar calificaciones
-        provider.fetchGrades(for: studentId) { [weak self] list in
+        provider.fetchGrades(for: studentId, schoolId: schoolId) { [weak self] list in
             self?.grades = list
         }
         
-        // Cargar datos del estudiante
-        provider.fetchStudent(studentId: studentId) { [weak self] student in
+        provider.fetchStudent(studentId: studentId, schoolId: schoolId) { [weak self] student in
             self?.student = student
         }
     }
