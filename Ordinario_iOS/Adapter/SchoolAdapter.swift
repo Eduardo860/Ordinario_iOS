@@ -45,8 +45,8 @@ enum SchoolAdapter {
     }
 
     // MARK: - Adaptar Task
-    static func convertTask(id: String, dict: [String: Any]) -> Task {
-            return Task(
+    static func convertTask(id: String, dict: [String: Any]) -> StudentTask {
+            return StudentTask(
                 //id: id, NO SE SI SE IMPLEMENTA EN BACKEND
                 title: dict["title"] as? String ?? "",
                 subject: dict["subject"] as? String ?? "",

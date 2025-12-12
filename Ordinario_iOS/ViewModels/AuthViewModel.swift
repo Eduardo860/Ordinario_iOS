@@ -7,6 +7,7 @@
 
 import Foundation
 import SwiftUI
+import Combine
 
 @MainActor
 class AuthViewModel: ObservableObject {
@@ -21,17 +22,15 @@ class AuthViewModel: ObservableObject {
     init() {
         checkAuthStatus()
     }
-    
-    // MARK: - Check Auth Status
+
     func checkAuthStatus() {
         if authService.hasValidToken() {
             isAuthenticated = true
-            // Optionally fetch current user
-            Task {
+            // Load user asynchronously
+            Task { @MainActor in
                 do {
                     currentUser = try await authService.getCurrentUser()
                 } catch {
-                    // If fetching user fails, token might be invalid
                     isAuthenticated = false
                     authService.logout()
                 }

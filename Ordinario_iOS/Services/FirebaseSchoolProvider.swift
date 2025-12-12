@@ -50,10 +50,10 @@ class FirebaseSchoolProvider: SchoolProvider {
     }
 
     // Cambiar la función fetchTasks para aceptar el schoolId dinámico
-    func fetchTasks(for studentId: String, schoolId: String, completion: @escaping ([Task]) -> Void) {
+    func fetchTasks(for studentId: String, schoolId: String, completion: @escaping ([StudentTask]) -> Void) {
         ref.child("institutions").child(schoolId).child("tasks").child(studentId)
             .observe(.value) { snap in
-                var list: [Task] = []
+                var list: [StudentTask] = []
                 
                 for child in snap.children {
                     if let snap = child as? DataSnapshot,

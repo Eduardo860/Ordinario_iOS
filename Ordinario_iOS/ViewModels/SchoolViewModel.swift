@@ -6,7 +6,7 @@ class SchoolViewModel: ObservableObject {
     @Published var config: SchoolConfig? // Configuración de la escuela
     @Published var announcements: [Announcement] = [] // Anuncios
     @Published var subjects: [Subject] = [] // Materias
-    @Published var tasks: [Task] = [] // Tareas
+    @Published var tasks: [StudentTask] = [] // Tareas
     @Published var grades: [Grade] = [] // Calificaciones
     @Published var student: Student? // Estudiante
     

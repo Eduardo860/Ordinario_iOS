@@ -6,8 +6,8 @@
 //
 import Foundation
 
-struct Task: Codable, Identifiable {
-    var id: String { title }  
+struct StudentTask: Codable, Identifiable {
+    var id: String { title }
     
     let title: String
     let subject: String

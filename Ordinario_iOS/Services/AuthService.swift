@@ -46,8 +46,6 @@ class AuthService {
     private init() {}
     
     // MARK: - Configuration
-    // Configure base URL for different environments (dev/staging/production)
-    // Example: AuthService.shared.configure(baseURL: "https://api.production.com/api/auth")
     func configure(baseURL: String) {
         self.baseURL = baseURL
     }
@@ -58,7 +56,7 @@ class AuthService {
             throw AuthError.invalidURL
         }
         
-        let loginRequest = LoginRequest(email: email, password: password)
+        let loginRequest = LoginRequest(email: email, password:  password)
         
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
@@ -85,7 +83,6 @@ class AuthService {
         
         do {
             let authResponse = try JSONDecoder().decode(AuthResponse.self, from: data)
-            // Save token to keychain
             _ = keychainManager.saveToken(authResponse.token)
             return authResponse
         } catch {
@@ -93,13 +90,13 @@ class AuthService {
         }
     }
     
-    // MARK: - Register
+    // MARK:  - Register
     func register(email: String, password: String, name: String) async throws -> AuthResponse {
         guard let url = URL(string: "\(baseURL)/register") else {
             throw AuthError.invalidURL
         }
         
-        let registerRequest = RegisterRequest(email: email, password: password, name: name)
+        let registerRequest = RegisterRequest(email: email, password:  password, name: name)
         
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
@@ -112,7 +109,11 @@ class AuthService {
             throw AuthError.invalidResponse
         }
         
-        guard httpResponse.statusCode == 200 || httpResponse.statusCode == 201 else {
+        if httpResponse.statusCode == 401 {
+            throw AuthError.invalidCredentials
+        }
+        
+        guard httpResponse.statusCode == 201 || httpResponse.statusCode == 200 else {
             if let errorMessage = try? JSONDecoder().decode([String: String].self, from: data),
                let message = errorMessage["message"] {
                 throw AuthError.serverError(message)
@@ -122,7 +123,6 @@ class AuthService {
         
         do {
             let authResponse = try JSONDecoder().decode(AuthResponse.self, from: data)
-            // Save token to keychain
             _ = keychainManager.saveToken(authResponse.token)
             return authResponse
         } catch {
@@ -142,13 +142,19 @@ class AuthService {
         
         var request = URLRequest(url: url)
         request.httpMethod = "GET"
-        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         
         let (data, response) = try await URLSession.shared.data(for: request)
         
         guard let httpResponse = response as? HTTPURLResponse else {
             throw AuthError.invalidResponse
+        }
+        
+        if httpResponse.statusCode == 401 {
+            // Token expired or invalid
+            keychainManager.deleteToken()
+            throw AuthError.invalidCredentials
         }
         
         guard httpResponse.statusCode == 200 else {
@@ -163,12 +169,12 @@ class AuthService {
         }
     }
     
-    // MARK: - Logout
+    // MARK:  - Logout
     func logout() {
         keychainManager.deleteToken()
     }
     
-    // MARK: - Check if has valid token
+    // MARK: - Has Valid Token
     func hasValidToken() -> Bool {
         return keychainManager.getToken() != nil
     }

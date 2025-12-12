@@ -5,6 +5,7 @@
 //  Created by Eduardo Pérez Córdova on 06/12/25.
 //
 import SwiftUI
+import Combine
 
 struct ProfileView: View {
     
