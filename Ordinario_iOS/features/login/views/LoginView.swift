@@ -4,8 +4,10 @@ struct LoginView: View {
     @State private var email = ""
     @State private var password = ""
     @State private var isPasswordVisible = false
+    @State private var showRegister = false
     
     @EnvironmentObject var vm: SchoolViewModel
+    @EnvironmentObject var authVM: AuthViewModel
     
     var body: some View {
         
@@ -100,18 +102,48 @@ struct LoginView: View {
                     
                     // Sign In Button
                     Button {
-                        // Acción de inicio de sesión
+                        Task {
+                            await authVM.login(email: email, password: password)
+                        }
                     } label: {
-                        Text("Sign In")
-                            .font(.headline)
-                            .frame(maxWidth: .infinity)
-                            .frame(height: 50)
-                            .background(Color(hex: config.primaryColor))
-                            .foregroundColor(.white)
-                            .cornerRadius(14)
-                            .shadow(color: .black.opacity(0.2), radius: 8, x: 0, y: 6)
+                        if authVM.isLoading {
+                            ProgressView()
+                                .tint(.white)
+                                .frame(maxWidth: .infinity)
+                                .frame(height: 50)
+                        } else {
+                            Text("Sign In")
+                                .font(.headline)
+                                .frame(maxWidth: .infinity)
+                                .frame(height: 50)
+                        }
                     }
+                    .background(Color(hex: config.primaryColor))
+                    .foregroundColor(.white)
+                    .cornerRadius(14)
+                    .shadow(color: .black.opacity(0.2), radius: 8, x: 0, y: 6)
+                    .disabled(email.isEmpty || password.isEmpty || authVM.isLoading)
+                    .opacity((email.isEmpty || password.isEmpty || authVM.isLoading) ? 0.6 : 1.0)
                     .padding(.top, 4)
+                    
+                    // Error Message
+                    if let errorMessage = authVM.errorMessage {
+                        Text(errorMessage)
+                            .font(.caption)
+                            .foregroundColor(.red)
+                            .multilineTextAlignment(.center)
+                            .padding(.horizontal)
+                    }
+                    
+                    // Register Button
+                    Button {
+                        showRegister = true
+                    } label: {
+                        Text("¿No tienes cuenta? Regístrate")
+                            .font(.subheadline)
+                            .foregroundColor(Color(hex: config.primaryColor))
+                    }
+                    .padding(.top, 8)
                     
                 }
                 .padding(24)
@@ -125,10 +157,16 @@ struct LoginView: View {
                 Spacer()
             }
         }
+        .sheet(isPresented: $showRegister) {
+            RegisterView()
+                .environmentObject(authVM)
+                .environmentObject(vm)
+        }
     }
 }
 
 #Preview {
     LoginView()
         .environmentObject(SchoolViewModel())
+        .environmentObject(AuthViewModel())
 }
