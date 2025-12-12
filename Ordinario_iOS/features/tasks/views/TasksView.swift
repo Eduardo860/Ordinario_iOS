@@ -8,7 +8,7 @@ import SwiftUI
 
 struct TasksView: View {
     
-    @EnvironmentObject var vm: SchoolViewModel  // Usamos SchoolViewModel
+    @EnvironmentObject var vm: SchoolViewModel  
     
     private let lightBackground = Color(red: 0.95, green: 0.95, blue: 0.97)
     

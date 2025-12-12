@@ -49,6 +49,6 @@ struct ProfileHeaderView: View {
 #Preview {
     ProfileHeaderView(
         config: .preview,
-        student: Student(name: "Diego Hernández", email: "test@mail.com", career: "Ingeniería", group: "7A", profilePicture: "")
+        student: Student(name: "Diego Hernández", email: "test@mail.com", career: "Ingeniería", group: "7A", profilePicture: "", password: "")
     )
 }
