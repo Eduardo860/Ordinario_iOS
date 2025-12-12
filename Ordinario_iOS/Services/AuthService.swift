@@ -37,14 +37,17 @@ class AuthService {
     
     static let shared = AuthService()
     
-    // Backend URL - can be configured for dev/production
+    // Backend URL - defaults to localhost for development
+    // Use configure(baseURL:) to set production URL before using the service
     private var baseURL = "http://localhost:3000/api/auth"
     
     private let keychainManager = KeychainManager.shared
     
     private init() {}
     
-    // Configure base URL (for switching between dev/prod)
+    // MARK: - Configuration
+    // Configure base URL for different environments (dev/staging/production)
+    // Example: AuthService.shared.configure(baseURL: "https://api.production.com/api/auth")
     func configure(baseURL: String) {
         self.baseURL = baseURL
     }

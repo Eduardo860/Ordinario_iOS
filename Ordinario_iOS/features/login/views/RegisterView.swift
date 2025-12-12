@@ -224,10 +224,18 @@ struct RegisterView: View {
     private var isFormValid: Bool {
         !name.isEmpty &&
         !email.isEmpty &&
+        isValidEmail(email) &&
         !password.isEmpty &&
         !confirmPassword.isEmpty &&
         password == confirmPassword &&
         password.count >= 6
+    }
+    
+    // Email validation helper
+    private func isValidEmail(_ email: String) -> Bool {
+        let emailRegex = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,64}"
+        let emailPredicate = NSPredicate(format: "SELF MATCHES %@", emailRegex)
+        return emailPredicate.evaluate(with: email)
     }
 }
 

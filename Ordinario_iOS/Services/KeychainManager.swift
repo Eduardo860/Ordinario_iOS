@@ -59,13 +59,16 @@ class KeychainManager {
     }
     
     // MARK: - Delete Token
-    func deleteToken() {
+    @discardableResult
+    func deleteToken() -> Bool {
         let query: [String: Any] = [
             kSecClass as String: kSecClassGenericPassword,
             kSecAttrService as String: serviceIdentifier,
             kSecAttrAccount as String: tokenKey
         ]
         
-        SecItemDelete(query as CFDictionary)
+        let status = SecItemDelete(query as CFDictionary)
+        // errSecSuccess or errSecItemNotFound are both acceptable outcomes
+        return status == errSecSuccess || status == errSecItemNotFound
     }
 }
