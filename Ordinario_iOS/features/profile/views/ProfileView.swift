@@ -9,6 +9,7 @@ import SwiftUI
 struct ProfileView: View {
     
     @EnvironmentObject var vm: SchoolViewModel
+    @EnvironmentObject var authVM: AuthViewModel
     
     var body: some View {
         
@@ -54,11 +55,15 @@ struct ProfileView: View {
                             color: primaryColor
                         )
                         
-                        ProfileOptionRowView(
-                            icon: "arrowshape.turn.up.left.fill",
-                            title: "Cerrar sesión",
-                            color: .red
-                        )
+                        Button {
+                            authVM.logout()
+                        } label: {
+                            ProfileOptionRowView(
+                                icon: "arrowshape.turn.up.left.fill",
+                                title: "Cerrar sesión",
+                                color: .red
+                            )
+                        }
                         
                     }
                     .padding(.horizontal)
@@ -74,4 +79,5 @@ struct ProfileView: View {
 #Preview {
     ProfileView()
         .environmentObject(SchoolViewModel())
+        .environmentObject(AuthViewModel())
 }
