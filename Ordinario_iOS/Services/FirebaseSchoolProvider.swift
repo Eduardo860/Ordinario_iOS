@@ -92,17 +92,23 @@ class FirebaseSchoolProvider: SchoolProvider {
         ref.child("institutions").child(schoolId).child("students").child(studentId)
             .observeSingleEvent(of: .value) { snap in
                 
+                
                 guard let dict = snap.value as? [String: Any] else { return completion(nil) }
+                
                 
                 let student = Student(
                     name: dict["name"] as? String ?? "",
                     email: dict["email"] as? String ?? "",
                     career: dict["career"] as? String ?? "",
-                    group: dict["group"] as? String ?? ""
+                    group: dict["group"] as? String ?? "",
+                    profilePicture: dict["profilePicture"] as? String,
+                    password: dict["password"] as? String ?? ""
                 )
+                
                 
                 completion(student)
             }
     }
+
 }
 

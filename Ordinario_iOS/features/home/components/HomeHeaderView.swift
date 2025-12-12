@@ -60,6 +60,6 @@ struct HomeHeaderView: View {
 #Preview {
     HomeHeaderView(
         config: .preview,
-        student: Student(name: "Diego Hernández", email: "test@mail.com", career: "Ing", group: "7A", profilePicture: "")
+        student: Student(name: "Diego Hernández", email: "test@mail.com", career: "Ing", group: "7A", profilePicture: "", password: "")
     )
 }

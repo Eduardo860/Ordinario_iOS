@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1010DAA72EEB963E00FE1A05 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 1010DAA62EEB963E00FE1A05 /* FirebaseAuth */; };
 		1075F7952EEA830000714182 /* FirebaseDatabase in Frameworks */ = {isa = PBXBuildFile; productRef = 1075F7942EEA830000714182 /* FirebaseDatabase */; };
 		1075F7972EEA830700714182 /* FirebaseCore in Frameworks */ = {isa = PBXBuildFile; productRef = 1075F7962EEA830700714182 /* FirebaseCore */; };
 /* End PBXBuildFile section */
@@ -29,6 +30,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				1075F7972EEA830700714182 /* FirebaseCore in Frameworks */,
+				1010DAA72EEB963E00FE1A05 /* FirebaseAuth in Frameworks */,
 				1075F7952EEA830000714182 /* FirebaseDatabase in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -36,10 +38,18 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		1010DAA52EEB963E00FE1A05 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		103D9A1A2EE0B0A70078D958 = {
 			isa = PBXGroup;
 			children = (
 				103D9A252EE0B0A70078D958 /* Ordinario_iOS */,
+				1010DAA52EEB963E00FE1A05 /* Frameworks */,
 				103D9A242EE0B0A70078D958 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -74,6 +84,7 @@
 			packageProductDependencies = (
 				1075F7942EEA830000714182 /* FirebaseDatabase */,
 				1075F7962EEA830700714182 /* FirebaseCore */,
+				1010DAA62EEB963E00FE1A05 /* FirebaseAuth */,
 			);
 			productName = Ordinario_iOS;
 			productReference = 103D9A232EE0B0A70078D958 /* Ordinario_iOS.app */;
@@ -357,6 +368,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		1010DAA62EEB963E00FE1A05 /* FirebaseAuth */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 1075F7912EEA818200714182 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAuth;
+		};
 		1075F7942EEA830000714182 /* FirebaseDatabase */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 1075F7912EEA818200714182 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;

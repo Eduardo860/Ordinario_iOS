@@ -19,19 +19,28 @@ struct LoginView: View {
                 
                 VStack(spacing: 16) {
                     
+                    // Logo centrado con un círculo
                     AsyncImage(url: URL(string: config.logo)) { image in
                         image.resizable()
                             .scaledToFit()
-                            .frame(maxWidth: 220)
+                            .frame(maxWidth: 200)
+                            .clipShape(Circle())
                     } placeholder: {
                         ProgressView()
                             .tint(.gray)
                     }
                     
+                    Text(config.name)
+                        .font(.title2.bold())
+                        .foregroundColor(.white)
+                        .padding(.top, 10)
+
                     Text("Login")
                         .font(.largeTitle.bold())
                         .foregroundColor(.white)
-                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .frame(maxWidth: .infinity, alignment: .center)
+                        .padding(.top, 8)
+                        
                 }
                 .padding(.horizontal, 24)
                 .padding(.top, 40)
@@ -39,10 +48,11 @@ struct LoginView: View {
                 
                 VStack(spacing: 20) {
                     
+                    // Email Field
                     VStack(alignment: .leading, spacing: 6) {
                         Text("Email")
                             .font(.caption)
-                            .foregroundColor(.gray)
+                            .foregroundColor(.white)
                         
                         TextField("correo@ejemplo.com", text: $email)
                             .keyboardType(.emailAddress)
@@ -50,20 +60,25 @@ struct LoginView: View {
                             .frame(height: 44)
                             .background(
                                 RoundedRectangle(cornerRadius: 12)
-                                    .strokeBorder(Color(hex: config.primaryColor).opacity(0.4))
+                                    .fill(Color.white)
+                                    .shadow(color: .black.opacity(0.1), radius: 6, x: 0, y: 4)
                             )
+                            .padding(.horizontal)
                     }
                     
+                    // Password Field
                     VStack(alignment: .leading, spacing: 6) {
                         Text("Password")
                             .font(.caption)
-                            .foregroundColor(.gray)
+                            .foregroundColor(.white)
                         
                         HStack {
                             if isPasswordVisible {
                                 TextField("••••••••", text: $password)
+                                    .autocapitalization(.none)
                             } else {
                                 SecureField("••••••••", text: $password)
+                                    .autocapitalization(.none)
                             }
                             
                             Button {
@@ -77,12 +92,15 @@ struct LoginView: View {
                         .frame(height: 44)
                         .background(
                             RoundedRectangle(cornerRadius: 12)
-                                .strokeBorder(Color(hex: config.primaryColor).opacity(0.4))
+                                .fill(Color.white)
+                                .shadow(color: .black.opacity(0.1), radius: 6, x: 0, y: 4)
                         )
+                        .padding(.horizontal)
                     }
                     
+                    // Sign In Button
                     Button {
-                        
+                        // Acción de inicio de sesión
                     } label: {
                         Text("Sign In")
                             .font(.headline)
@@ -91,6 +109,7 @@ struct LoginView: View {
                             .background(Color(hex: config.primaryColor))
                             .foregroundColor(.white)
                             .cornerRadius(14)
+                            .shadow(color: .black.opacity(0.2), radius: 8, x: 0, y: 6)
                     }
                     .padding(.top, 4)
                     

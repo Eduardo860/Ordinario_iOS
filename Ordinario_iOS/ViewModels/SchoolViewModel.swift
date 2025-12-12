@@ -17,12 +17,12 @@ class SchoolViewModel: ObservableObject {
     @Published var grades: [Grade] = [] // Calificaciones
     @Published var student: Student? // Estudiante
     
-    private let provider: SchoolProvider // Proveedor de datos (Firebase o Mock)
+    private let provider: SchoolProvider 
     
     // Inicialización
     init(provider: SchoolProvider = FirebaseSchoolProvider()) {
         self.provider = provider
-        loadInitialData(studentId: "alumno02") // Cargar datos del alumno con ID "alumno02"
+        loadInitialData(studentId: "alumno02")
     }
     
     // Cargar datos de Firebase

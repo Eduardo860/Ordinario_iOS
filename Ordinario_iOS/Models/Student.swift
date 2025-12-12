@@ -9,12 +9,13 @@ import Foundation
 struct Student: Codable, Identifiable {
     
     
-    init(name: String, email: String, career: String, group: String, profilePicture: String? = nil) {
+    init(name: String, email: String, career: String, group: String, profilePicture: String? = nil, password:String) {
         self.name = name
         self.email = email
         self.career = career
         self.group = group
         self.profilePicture = profilePicture
+        self.password = password
     }
     
     var id: String { email }
@@ -24,4 +25,5 @@ struct Student: Codable, Identifiable {
     let career: String
     let group: String
     let profilePicture: String?
+    let password: String
 }
