@@ -24,10 +24,22 @@ struct Ordinario_iOSApp: App {
     // Registrar el AppDelegate para inicializar Firebase
     @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
     
+    // ViewModels
+    @StateObject private var authViewModel = AuthViewModel()
+    @StateObject private var schoolViewModel = SchoolViewModel()
+    
     var body: some Scene {
         WindowGroup {
-            NavigationStack {
-                SplashView()
+            if authViewModel.isAuthenticated {
+                // Show main app when authenticated
+                HomeView()
+                    .environmentObject(authViewModel)
+                    .environmentObject(schoolViewModel)
+            } else {
+                // Show login when not authenticated
+                LoginView()
+                    .environmentObject(authViewModel)
+                    .environmentObject(schoolViewModel)
             }
         }
     }
