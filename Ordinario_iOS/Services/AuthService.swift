@@ -151,7 +151,7 @@ class AuthService {
     }
     
     // MARK: - Get Current User
-    func getCurrentUser() async throws -> User {
+    func getCurrentUser() async throws -> AuthResponse {
         guard let token = keychainManager.getToken() else {
             throw AuthError.noToken
         }
@@ -172,7 +172,6 @@ class AuthService {
         }
         
         if httpResponse.statusCode == 401 {
-            // Token expired or invalid
             keychainManager.deleteToken()
             throw AuthError.invalidCredentials
         }
@@ -182,9 +181,11 @@ class AuthService {
         }
         
         do {
-            let user = try JSONDecoder().decode(User.self, from: data)
-            return user
+            // Decodificar como BackendResponse<AuthResponse>
+            let backendResponse = try JSONDecoder().decode(BackendResponse<AuthResponse>.self, from: data)
+            return backendResponse.data
         } catch {
+            print("❌ Decoding error: \(error)")
             throw AuthError.decodingError
         }
     }

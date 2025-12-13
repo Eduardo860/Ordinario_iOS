@@ -12,8 +12,9 @@ import Combine
 @MainActor
 class AuthViewModel: ObservableObject {
     
-    @Published var isAuthenticated: Bool = false
+    @Published var isAuthenticated:  Bool = false
     @Published var currentUser: User?
+    @Published var currentStudent: Student?  // ← AGREGAR ESTO
     @Published var isLoading: Bool = false
     @Published var errorMessage: String?
     
@@ -22,14 +23,16 @@ class AuthViewModel: ObservableObject {
     init() {
         checkAuthStatus()
     }
-
+    
+    // MARK: - Check Auth Status
     func checkAuthStatus() {
         if authService.hasValidToken() {
             isAuthenticated = true
-            // Load user asynchronously
             Task { @MainActor in
                 do {
-                    currentUser = try await authService.getCurrentUser()
+                    let response = try await authService.getCurrentUser()
+                    currentUser = response.user.toUser(withStudent: response.student)
+                    currentStudent = response.student  // ← GUARDAR STUDENT
                 } catch {
                     isAuthenticated = false
                     authService.logout()
@@ -47,13 +50,8 @@ class AuthViewModel: ObservableObject {
         
         do {
             let response = try await authService.login(email: email, password: password)
-            
-            // Convertir FirebaseUser + Student a User
             currentUser = response.user.toUser(withStudent: response.student)
-            
-            // Opcional: Guardar información del estudiante si la necesitas
-            // Puedes crear una propiedad @Published var currentStudent: Student?
-            
+            currentStudent = response.student  // ← GUARDAR STUDENT
             isAuthenticated = true
         } catch {
             errorMessage = error.localizedDescription
@@ -62,20 +60,16 @@ class AuthViewModel: ObservableObject {
         
         isLoading = false
     }
-
+    
     // MARK: - Register
-    func register(email: String, password: String, name: String, institutionId: String?) async {
+    func register(email: String, password: String, name: String, institutionId: String? = "nahualschool") async {
         isLoading = true
         errorMessage = nil
         
-        let resolvedInstitutionId = institutionId ?? "nahualschool"
-        
         do {
-            let response = try await authService.register(email: email, password:  password, name: name, institutionId: resolvedInstitutionId)
-            
-            // Convertir FirebaseUser + Student a User
+            let response = try await authService.register(email: email, password: password, name: name, institutionId: institutionId)
             currentUser = response.user.toUser(withStudent: response.student)
-            
+            currentStudent = response.student
             isAuthenticated = true
         } catch {
             errorMessage = error.localizedDescription
@@ -89,6 +83,7 @@ class AuthViewModel: ObservableObject {
     func logout() {
         authService.logout()
         currentUser = nil
+        currentStudent = nil  // ← LIMPIAR STUDENT
         isAuthenticated = false
     }
 }

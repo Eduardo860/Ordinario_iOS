@@ -7,11 +7,12 @@
 
 import SwiftUI
 import Firebase
+import Combine
 
 // Firebase AppDelegate
 class AppDelegate: NSObject, UIApplicationDelegate {
     func application(_ application: UIApplication,
-                     didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
+                     didFinishLaunchingWithOptions launchOptions:  [UIApplication.LaunchOptionsKey :  Any]? = nil) -> Bool {
         
         FirebaseApp.configure()
         return true
@@ -21,25 +22,36 @@ class AppDelegate: NSObject, UIApplicationDelegate {
 @main
 struct Ordinario_iOSApp: App {
     
-    // Registrar el AppDelegate para inicializar Firebase
     @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
-    
-    // ViewModels
     @StateObject private var authViewModel = AuthViewModel()
     @StateObject private var schoolViewModel = SchoolViewModel()
     
     var body: some Scene {
         WindowGroup {
-            if authViewModel.isAuthenticated {
-                // Show main app when authenticated
-                HomeView()
-                    .environmentObject(authViewModel)
-                    .environmentObject(schoolViewModel)
-            } else {
-                // Show login when not authenticated
-                LoginView()
-                    .environmentObject(authViewModel)
-                    .environmentObject(schoolViewModel)
+            Group {
+                if authViewModel.isAuthenticated {
+                    // Show main app when authenticated
+                    HomeView()
+                        .environmentObject(authViewModel)
+                        .environmentObject(schoolViewModel)
+                        .onAppear {
+                            // Cargar datos del estudiante autenticado
+                            if let student = authViewModel.currentStudent {
+                                schoolViewModel.loadData(for: student)
+                            }
+                        }
+                } else {
+                    // Show login when not authenticated
+                    LoginView()
+                        .environmentObject(authViewModel)
+                        .environmentObject(schoolViewModel)
+                }
+            }
+            .onChange(of: authViewModel.currentStudent) { oldValue, newValue in
+                // Cuando cambie el estudiante (después del login), cargar sus datos
+                if let student = newValue {
+                    schoolViewModel.loadData(for: student)
+                }
             }
         }
     }
