@@ -100,14 +100,26 @@ class AuthService {
     }
     
     // MARK: - Register
-    func register(email: String, password: String, name: String, institutionId: String?) async throws -> AuthResponse {
-        guard let url = URL(string:  "\(baseURL)/register") else {
+    func register(email: String, password: String, name: String, institutionId: String, career: String, group: String) async throws -> AuthResponse {
+        guard let url = URL(string: "\(baseURL)/register") else {
             throw AuthError.invalidURL
         }
         
-        let resolvedInstitutionId = institutionId ?? "nahualschool"
+        // Crear el studentData
+        let studentData = RegisterRequest.StudentData(
+            name: name,
+            career: career,
+            group: group,
+            email: email
+        )
         
-        let registerRequest = RegisterRequest(email: email, password: password, name: name, institutionId: resolvedInstitutionId)
+        // Crear el request completo
+        let registerRequest = RegisterRequest(
+            email: email,
+            password: password,
+            institutionId: institutionId,
+            studentData:  studentData
+        )
         
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
@@ -125,25 +137,29 @@ class AuthService {
         }
         
         guard httpResponse.statusCode == 201 || httpResponse.statusCode == 200 else {
-            if let errorMessage = try? JSONDecoder().decode([String: String].self, from: data),
+            if let errorMessage = try? JSONDecoder().decode([String:  String].self, from: data),
                let message = errorMessage["message"] {
                 throw AuthError.serverError(message)
             }
-            throw AuthError.serverError("Error del servidor: \(httpResponse.statusCode)")
+            
+            // Imprimir el error para debug
+            if let jsonString = String(data: data, encoding: .utf8) {
+                print("❌ Server error response: \(jsonString)")
+            }
+            
+            throw AuthError.serverError("Error del servidor:  \(httpResponse.statusCode)")
         }
         
         do {
-            // 🔥 CAMBIO AQUÍ: Decodificar la respuesta envuelta
             let backendResponse = try JSONDecoder().decode(BackendResponse<AuthResponse>.self, from: data)
             let authResponse = backendResponse.data
             
-            // Guardar token en keychain
             _ = keychainManager.saveToken(authResponse.token)
             
             return authResponse
         } catch {
             print("❌ Decoding error: \(error)")
-            if let jsonString = String(data: data, encoding: .utf8) {
+            if let jsonString = String(data:  data, encoding: .utf8) {
                 print("📄 Response JSON: \(jsonString)")
             }
             throw AuthError.decodingError

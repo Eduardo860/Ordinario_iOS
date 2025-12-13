@@ -10,14 +10,17 @@ import SwiftUI
 struct RegisterView: View {
     @State private var name = ""
     @State private var email = ""
-    @State private var institutionId = ""
     @State private var password = ""
     @State private var confirmPassword = ""
+    @State private var career = ""
+    @State private var group = ""
+    @State private var institutionId = ""  // ← Ahora vacío para que el usuario lo ingrese
+    
     @State private var isPasswordVisible = false
     @State private var isConfirmPasswordVisible = false
     
     @EnvironmentObject var vm: SchoolViewModel
-    @EnvironmentObject var authVM: AuthViewModel
+    @EnvironmentObject var authVM:  AuthViewModel
     @Environment(\.dismiss) var dismiss
     
     var body: some View {
@@ -26,36 +29,36 @@ struct RegisterView: View {
         NavigationStack {
             ZStack {
                 Color(hex: config.primaryColor)
-                    .ignoresSafeArea()
+                    . ignoresSafeArea()
                 
                 ScrollView {
                     VStack(spacing: 32) {
                         
                         VStack(spacing: 16) {
                             // Logo
-                            AsyncImage(url: URL(string: config.logo)) { image in
+                            AsyncImage(url: URL(string:  config.logo)) { image in
                                 image.resizable()
-                                    .scaledToFit()
+                                    . scaledToFit()
                                     .frame(maxWidth: 120)
-                                    .clipShape(Circle())
+                                    . clipShape(Circle())
                             } placeholder: {
                                 ProgressView()
-                                    .tint(.gray)
+                                    . tint(.gray)
                             }
                             
                             Text("Crear Cuenta")
-                                .font(.largeTitle.bold())
+                                .font(. largeTitle.bold())
                                 .foregroundColor(.white)
                         }
-                        .padding(.top, 40)
+                        . padding(.top, 40)
                         
                         VStack(spacing: 20) {
                             
                             // Name Field
-                            VStack(alignment: .leading, spacing: 6) {
+                            VStack(alignment: . leading, spacing: 6) {
                                 Text("Nombre completo")
                                     .font(.caption)
-                                    .foregroundColor(.white)
+                                    . foregroundColor(.white)
                                 
                                 TextField("Juan Pérez", text: $name)
                                     .padding(.horizontal, 12)
@@ -63,7 +66,7 @@ struct RegisterView: View {
                                     .background(
                                         RoundedRectangle(cornerRadius: 12)
                                             .fill(Color.white)
-                                            .shadow(color: .black.opacity(0.1), radius: 6, x: 0, y: 4)
+                                            . shadow(color: .black.opacity(0.1), radius: 6, x: 0, y:  4)
                                     )
                                     .padding(.horizontal)
                             }
@@ -72,7 +75,7 @@ struct RegisterView: View {
                             VStack(alignment: .leading, spacing: 6) {
                                 Text("Email")
                                     .font(.caption)
-                                    .foregroundColor(.white)
+                                    .foregroundColor(. white)
                                 
                                 TextField("correo@ejemplo.com", text: $email)
                                     .keyboardType(.emailAddress)
@@ -85,9 +88,16 @@ struct RegisterView: View {
                                             .shadow(color: .black.opacity(0.1), radius: 6, x: 0, y: 4)
                                     )
                                     .padding(.horizontal)
-                                TextField("Nahualschool", text: $institutionId)
-                                    .keyboardType(.default)
-                                    .autocapitalization(.none)
+                            }
+                            
+                            // Institution ID Field ← AGREGADO
+                            VStack(alignment: .leading, spacing: 6) {
+                                Text("ID de Institución")
+                                    .font(.caption)
+                                    .foregroundColor(.white)
+                                
+                                TextField("nahualschool", text: $institutionId)
+                                    . autocapitalization(.none)
                                     .padding(.horizontal, 12)
                                     .frame(height: 44)
                                     .background(
@@ -98,10 +108,44 @@ struct RegisterView: View {
                                     .padding(.horizontal)
                             }
                             
+                            // Career Field
+                            VStack(alignment: .leading, spacing: 6) {
+                                Text("Carrera")
+                                    . font(.caption)
+                                    .foregroundColor(.white)
+                                
+                                TextField("Ingeniería en Software", text:  $career)
+                                    . padding(.horizontal, 12)
+                                    .frame(height: 44)
+                                    . background(
+                                        RoundedRectangle(cornerRadius:  12)
+                                            . fill(Color.white)
+                                            .shadow(color: . black.opacity(0.1), radius: 6, x: 0, y: 4)
+                                    )
+                                    .padding(.horizontal)
+                            }
+                            
+                            // Group Field
+                            VStack(alignment: .leading, spacing: 6) {
+                                Text("Grupo")
+                                    . font(.caption)
+                                    .foregroundColor(.white)
+                                
+                                TextField("7A", text: $group)
+                                    .padding(.horizontal, 12)
+                                    . frame(height: 44)
+                                    .background(
+                                        RoundedRectangle(cornerRadius: 12)
+                                            .fill(Color.white)
+                                            .shadow(color: .black.opacity(0.1), radius: 6, x: 0, y:  4)
+                                    )
+                                    .padding(.horizontal)
+                            }
+                            
                             // Password Field
                             VStack(alignment: .leading, spacing: 6) {
                                 Text("Contraseña")
-                                    .font(.caption)
+                                    .font(. caption)
                                     .foregroundColor(.white)
                                 
                                 HStack {
@@ -115,8 +159,8 @@ struct RegisterView: View {
                                     
                                     Button {
                                         isPasswordVisible.toggle()
-                                    } label: {
-                                        Image(systemName: isPasswordVisible ? "eye.slash" : "eye")
+                                    } label:  {
+                                        Image(systemName: isPasswordVisible ?  "eye.slash" : "eye")
                                             .foregroundColor(Color(hex: config.primaryColor))
                                     }
                                 }
@@ -131,9 +175,9 @@ struct RegisterView: View {
                             }
                             
                             // Confirm Password Field
-                            VStack(alignment: .leading, spacing: 6) {
+                            VStack(alignment:  .leading, spacing: 6) {
                                 Text("Confirmar contraseña")
-                                    .font(.caption)
+                                    .font(. caption)
                                     .foregroundColor(.white)
                                 
                                 HStack {
@@ -148,37 +192,44 @@ struct RegisterView: View {
                                     Button {
                                         isConfirmPasswordVisible.toggle()
                                     } label: {
-                                        Image(systemName: isConfirmPasswordVisible ? "eye.slash" : "eye")
+                                        Image(systemName:  isConfirmPasswordVisible ? "eye.slash" : "eye")
                                             .foregroundColor(Color(hex: config.primaryColor))
                                     }
                                 }
-                                .padding(.horizontal, 12)
+                                .padding(. horizontal, 12)
                                 .frame(height: 44)
                                 .background(
                                     RoundedRectangle(cornerRadius: 12)
                                         .fill(Color.white)
-                                        .shadow(color: .black.opacity(0.1), radius: 6, x: 0, y: 4)
+                                        .shadow(color: .black.opacity(0.1), radius: 6, x: 0, y:  4)
                                 )
                                 .padding(.horizontal)
                                 
                                 // Password match validation
                                 if !confirmPassword.isEmpty && password != confirmPassword {
                                     Text("Las contraseñas no coinciden")
-                                        .font(.caption)
+                                        .font(. caption)
                                         .foregroundColor(.red)
                                         .padding(.horizontal)
                                 }
                             }
                             
                             // Register Button
-                            Button {
+                            Button(action: {
                                 Task {
-                                    await authVM.register(email: email, password: password, name: name, institutionId: institutionId)
+                                    await authVM.register(
+                                        email: email,
+                                        password: password,
+                                        name: name,
+                                        institutionId:  institutionId,
+                                        career: career,
+                                        group: group
+                                    )
                                     if authVM.isAuthenticated {
                                         dismiss()
                                     }
                                 }
-                            } label: {
+                            }) {
                                 if authVM.isLoading {
                                     ProgressView()
                                         .tint(.white)
@@ -187,14 +238,14 @@ struct RegisterView: View {
                                 } else {
                                     Text("Registrarse")
                                         .font(.headline)
-                                        .frame(maxWidth: .infinity)
+                                        . frame(maxWidth: .infinity)
                                         .frame(height: 50)
                                 }
                             }
                             .background(Color(hex: config.primaryColor))
-                            .foregroundColor(.white)
+                            .foregroundColor(. white)
                             .cornerRadius(14)
-                            .shadow(color: .black.opacity(0.2), radius: 8, x: 0, y: 6)
+                            .shadow(color: .black.opacity(0.2), radius: 8, x: 0, y:  6)
                             .disabled(!isFormValid || authVM.isLoading)
                             .opacity((!isFormValid || authVM.isLoading) ? 0.6 : 1.0)
                             .padding(.top, 4)
@@ -202,10 +253,10 @@ struct RegisterView: View {
                             // Error Message
                             if let errorMessage = authVM.errorMessage {
                                 Text(errorMessage)
-                                    .font(.caption)
+                                    .font(. caption)
                                     .foregroundColor(.red)
                                     .multilineTextAlignment(.center)
-                                    .padding(.horizontal)
+                                    .padding(. horizontal)
                             }
                         }
                         .padding(24)
@@ -214,7 +265,7 @@ struct RegisterView: View {
                                 .fill(Color.white)
                                 .shadow(color: .black.opacity(0.08), radius: 12)
                         )
-                        .padding(.horizontal, 24)
+                        . padding(.horizontal, 24)
                         
                         Spacer()
                     }
@@ -237,6 +288,9 @@ struct RegisterView: View {
         !name.isEmpty &&
         !email.isEmpty &&
         isValidEmail(email) &&
+        !institutionId.isEmpty &&  // ← Validar que no esté vacío
+        !career.isEmpty &&
+        !group.isEmpty &&
         !password.isEmpty &&
         !confirmPassword.isEmpty &&
         password == confirmPassword &&

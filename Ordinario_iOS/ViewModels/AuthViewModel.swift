@@ -62,12 +62,19 @@ class AuthViewModel: ObservableObject {
     }
     
     // MARK: - Register
-    func register(email: String, password: String, name: String, institutionId: String? = "nahualschool") async {
+    func register(email: String, password:  String, name: String, institutionId: String, career: String, group: String) async {
         isLoading = true
         errorMessage = nil
         
         do {
-            let response = try await authService.register(email: email, password: password, name: name, institutionId: institutionId)
+            let response = try await authService.register(
+                email: email,
+                password: password,
+                name:  name,
+                institutionId:  institutionId,
+                career:  career,
+                group: group
+            )
             currentUser = response.user.toUser(withStudent: response.student)
             currentStudent = response.student
             isAuthenticated = true

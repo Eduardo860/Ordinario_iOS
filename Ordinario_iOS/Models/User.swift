@@ -51,9 +51,16 @@ struct LoginRequest: Codable {
 }
 
 // MARK: - Register Request
-struct RegisterRequest: Codable {
+struct RegisterRequest:  Codable {
     let email: String
     let password: String
-    let name: String
-    let institutionId: String?
+    let institutionId: String
+    let studentData: StudentData
+    
+    struct StudentData: Codable {
+        let name: String
+        let career: String
+        let group:  String
+        let email: String
+    }
 }
