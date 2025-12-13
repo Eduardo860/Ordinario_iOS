@@ -20,8 +20,8 @@ struct SchoolConfig: Codable {
 
 extension SchoolConfig {
     static let preview: SchoolConfig = SchoolConfig(
-        name: "Instituto Demo",
-        logo: "https://dummyimage.com/200x200/0055ff/ffffff.png&text=Demo",
+        name: "Plataforma Educativa",
+        logo: "https://us.123rf.com/450wm/blumer/blumer1411/blumer141100027/33238082-white-book-icon-on-blue-background-flat-design.jpg",
         welcomeMessage: "Bienvenido a tu plataforma educativa",
         homeText: "Consulta tus materias, tareas y calificaciones",
         supportUrl: "https://soporte.demo.com",
