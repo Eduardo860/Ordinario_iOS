@@ -6,13 +6,23 @@
 //
 import SwiftUI
 
-struct GradeHeaderView: View {
+struct GradeHeaderView:  View {
     
     @EnvironmentObject var vm: SchoolViewModel
     
-    var body: some View {
-        let config = vm.config ?? SchoolConfig.preview  
+    var body:  some View {
+        let config = vm.config ?? SchoolConfig.preview
         let primaryColor = Color(hex: config.primaryColor)
+        
+        // 🔥 CALCULAR EL PROMEDIO DINÁMICAMENTE
+        let averageGrade:  String = {
+            if vm.grades.isEmpty {
+                return "--"
+            } else {
+                let average = vm.grades.map { $0.value }.average
+                return String(format: "%.1f", average)
+            }
+        }()
         
         VStack(alignment: .leading, spacing: 12) {
             
@@ -23,12 +33,18 @@ struct GradeHeaderView: View {
             HStack {
                 VStack(alignment: .leading, spacing: 4) {
                     Text("Promedio General")
-                        .font(.caption)
-                        .foregroundColor(.gray)
+                        . font(.caption)
+                        . foregroundColor(.gray)
                     
-                    Text("9.2")
+                    // ✅ USAR EL PROMEDIO CALCULADO
+                    Text(averageGrade)
                         .font(.largeTitle.bold())
                         .foregroundColor(primaryColor)
+                    
+                    // OPCIONAL: Mostrar cantidad de calificaciones
+                    Text("\(vm.grades.count) calificaciones")
+                        .font(.caption2)
+                        .foregroundColor(.gray)
                 }
                 
                 Spacer()
@@ -37,7 +53,7 @@ struct GradeHeaderView: View {
                     .font(.largeTitle)
                     .foregroundColor(primaryColor.opacity(0.9))
             }
-            .padding()
+            . padding()
             .background(
                 RoundedRectangle(cornerRadius: 20)
                     .fill(Color.white)

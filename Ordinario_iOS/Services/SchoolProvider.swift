@@ -7,9 +7,12 @@
 protocol SchoolProvider {
     func fetchConfig(schoolId: String, completion: @escaping (SchoolConfig?) -> Void)
     func fetchAnnouncements(schoolId: String, completion: @escaping ([Announcement]) -> Void)
-    func fetchSubjects(for studentId: String, schoolId: String, completion: @escaping ([Subject]) -> Void)
+    func fetchSubjects(for studentId: String, schoolId:  String, completion: @escaping ([Subject]) -> Void)
     func fetchTasks(for studentId: String, schoolId: String, completion: @escaping ([StudentTask]) -> Void)
-    func fetchGrades(for studentId: String, schoolId: String, completion: @escaping ([Grade]) -> Void)
+    func fetchGrades(for studentId:  String, schoolId: String, completion: @escaping ([Grade]) -> Void)
     func fetchStudent(studentId: String, schoolId: String, completion: @escaping (Student?) -> Void)
+    
+    // ← AGREGAR ESTE MÉTODO
+    func updateTaskStatus(taskId: String, studentId: String, schoolId: String, newStatus: String, completion: @escaping (Bool) -> Void)
 }
 

@@ -8,7 +8,7 @@ import SwiftUI
 
 struct TasksView: View {
     
-    @EnvironmentObject var vm: SchoolViewModel  
+    @EnvironmentObject var vm:  SchoolViewModel
     
     private let lightBackground = Color(red: 0.95, green: 0.95, blue: 0.97)
     
@@ -17,18 +17,16 @@ struct TasksView: View {
             ScrollView {
                 VStack(spacing: 20) {
                     
-                  
                     TaskFilterBarView()
-                        .padding(.top, 16)
-                    
+                        . padding(.top, 16)
                     
                     ForEach(vm.tasks, id: \.id) { task in
                         TaskRowView(
-                            title: task.title,
-                            subject: task.subject,
-                            status: task.status,
-                            date: task.dueDate,
-                            primaryColor: Color(hex: vm.config?.primaryColor ?? "#63c")
+                            task: task,
+                            primaryColor: Color(hex: vm.config?.primaryColor ?? "#63c"),
+                            onStatusChange: { task, newStatus in
+                                vm.updateTaskStatus(task: task, newStatus: newStatus)
+                            }
                         )
                     }
                 }
@@ -43,5 +41,5 @@ struct TasksView: View {
 
 #Preview {
     TasksView()
-        .environmentObject(SchoolViewModel())  
+        .environmentObject(SchoolViewModel())
 }

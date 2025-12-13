@@ -51,13 +51,52 @@ class SchoolViewModel: ObservableObject {
         
         // Cargar grades
         provider.fetchGrades(for: student.id, schoolId: schoolId) { [weak self] list in
-            self?.grades = list
+            guard let self = self else { return }
+            
+            // Enriquecer grades con el nombre de la materia
+            let enrichedGrades = list.map { grade -> Grade in
+                // Buscar la materia correspondiente
+                let subject = self.subjects.first(where: { $0.id == grade.subjectId })
+                
+                return Grade(
+                    id:  grade.id,
+                    title: grade.title,
+                    value: grade.value,
+                    subjectId: grade.subjectId,
+                    subjectName: subject?.name,  // Agregar el nombre de la materia
+                    date: grade.date,
+                    weight: grade.weight
+                )
+            }
+            
+            self.grades = enrichedGrades
         }
+        
+        
     }
     
     // Método para recargar datos si es necesario
     func reloadData() {
         guard let student = student else { return }
         loadData(for: student)
+    }
+    
+    // MARK: - Update Task Status
+    func updateTaskStatus(task: StudentTask, newStatus: String) {
+        guard let studentId = studentId else { return }
+        
+        provider.updateTaskStatus(
+            taskId: task.id,
+            studentId: studentId,
+            schoolId: schoolId,
+            newStatus: newStatus
+        ) { [weak self] success in
+            if success {
+                // Actualizar localmente para feedback inmediato
+                if let index = self?.tasks.firstIndex(where: { $0.id == task.id }) {
+                    self?.tasks[index].status = newStatus
+                }
+            }
+        }
     }
 }

@@ -46,14 +46,14 @@ enum SchoolAdapter {
 
     // MARK: - Adaptar Task
     static func convertTask(id: String, dict: [String: Any]) -> StudentTask {
-            return StudentTask(
-                //id: id, NO SE SI SE IMPLEMENTA EN BACKEND
-                title: dict["title"] as? String ?? "",
-                subject: dict["subject"] as? String ?? "",
-                status: dict["status"] as? String ?? "Pendiente",
-                dueDate: dict["dueDate"] as? String ?? "No definida"
-            )
-        }
+        return StudentTask(
+            id: id,  
+            title: dict["title"] as? String ?? "",
+            subject: dict["subject"] as? String ?? "",
+            status: dict["status"] as? String ?? "Pendiente",
+            dueDate: dict["dueDate"] as? String ?? "No definida"
+        )
+    }
     
     // MARK: - Adaptar Grade
     static func convertGrade(id: String, dict: [String: Any]) -> Grade {

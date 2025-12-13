@@ -65,21 +65,59 @@ class FirebaseSchoolProvider: SchoolProvider {
             }
     }
     
-    // Cambiar la función fetchGrades para aceptar el schoolId dinámico
+    // MARK: - Update Task Status
+    func updateTaskStatus(taskId: String, studentId:  String, schoolId: String, newStatus: String, completion: @escaping (Bool) -> Void) {
+        ref.child("institutions").child(schoolId).child("tasks").child(studentId).child(taskId)
+            .updateChildValues(["status": newStatus]) { error, _ in
+                if let error = error {
+                    print("❌ Error updating task:  \(error.localizedDescription)")
+                    completion(false)
+                } else {
+                    print("✅ Task updated successfully")
+                    completion(true)
+                }
+            }
+    }
+    
+    // MARK: - Fetch Grades
     func fetchGrades(for studentId: String, schoolId: String, completion: @escaping ([Grade]) -> Void) {
-        ref.child("institutions").child(schoolId).child("grades").child(studentId).child("ios")
-            .observe(.value) { snap in
+        ref.child("institutions").child(schoolId).child("grades").child(studentId)
+            .observe(.value) { snapshot in
                 var list: [Grade] = []
                 
-                for child in snap.children {
-                    if let snap = child as? DataSnapshot,
-                       let dict = snap.value as? [String: Any] {
-                        list.append(SchoolAdapter.convertGrade(id: snap.key, dict: dict))
+                // Primer nivel: subjectIds
+                for subjectChild in snapshot.children {
+                    guard let subjectSnap = subjectChild as? DataSnapshot else { continue }
+                    let subjectId = subjectSnap.key
+                    
+                    // Segundo nivel: grades de esa materia
+                    for gradeChild in subjectSnap.children {
+                        guard let gradeSnap = gradeChild as?  DataSnapshot,
+                              let dict = gradeSnap.value as? [String: Any] else { continue }
+                        
+                        // Convertir el grade y agregar el subjectId
+                        var grade = SchoolAdapter.convertGrade(id: gradeSnap.key, dict: dict)
+                        
+                        // Crear un nuevo Grade con el subjectId incluido
+                        // (necesitamos modificar el modelo para que sea mutable o recrearlo)
+                        let gradeWithSubject = Grade(
+                            id:  grade.id,
+                            title: grade.title,
+                            value: grade.value,
+                            subjectId: subjectId,
+                            subjectName: nil,  // Lo obtendremos después si es necesario
+                            date:  grade.date,
+                            weight: grade.weight
+                        )
+                        
+                        list.append(gradeWithSubject)
                     }
                 }
+                
                 completion(list)
             }
     }
+    
     
     // Cambiar la función fetchStudent para aceptar el schoolId dinámico
     func fetchStudent(studentId: String, schoolId: String, completion: @escaping (Student?) -> Void) {
